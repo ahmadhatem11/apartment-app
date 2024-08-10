@@ -10,4 +10,4 @@
 docker-compose up --build
 ```
 
-3. RUN FrontEnd
+3. Run Frontend on port 3001
