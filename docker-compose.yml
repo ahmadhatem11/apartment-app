@@ -1,0 +1,44 @@
+services:
+  backend:
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_NAME=nawy
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASSWORD=635241
+    build:
+      context: ./ApartmentBackend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./ApartmentBackend:/workspace:cached
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=nawy
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=635241
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nawy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./apartmentfrontend
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./apartmentfrontend:/workspace:cached
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
